@@ -26,7 +26,7 @@ public class NoteController {
         return new ModelAndView("add-note");
     }
 
-//  Postman: http://localhost:8080/note/add?title=someTitle&content=someContent
+//  http://localhost:8080/note/add?title=someTitle&content=someContent
     @PostMapping("/add")
     public String addNote(@RequestParam("title") String title, @RequestParam("content") String content) {
         if (title == null || title.length() < 2) {
@@ -45,8 +45,7 @@ public class NoteController {
         return "redirect:/note/list";
     }
 
-
-    //  Postman: http://localhost:8080/note/delete + option: "x-www-form-urlencoded" with key: id, value: 1;
+    // http://localhost:8080/note/delete/3
     @PostMapping("/delete/{id}")
     public String deleteById(@PathVariable("id") String id) {
         try {
@@ -57,7 +56,7 @@ public class NoteController {
         return "redirect:/note/list";
     }
 
-//  http://localhost:8080/note/edit?id=3
+//  http://localhost:8080/note/edit/5
     @GetMapping("/edit/{id}")
     public ModelAndView editPage(@PathVariable("id") String id) {
         ModelAndView result = new ModelAndView("edit-note");
