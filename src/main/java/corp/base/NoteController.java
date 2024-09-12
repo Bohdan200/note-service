@@ -2,10 +2,7 @@ package corp.base;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RequiredArgsConstructor
@@ -50,8 +47,8 @@ public class NoteController {
 
 
     //  Postman: http://localhost:8080/note/delete + option: "x-www-form-urlencoded" with key: id, value: 1;
-    @PostMapping("/delete")
-    public String deleteById(@RequestParam("id") String id) {
+    @PostMapping("/delete/{id}")
+    public String deleteById(@PathVariable("id") String id) {
         try {
             noteService.deleteById(Long.parseLong(id));
         } catch (IllegalArgumentException e) {
@@ -61,8 +58,8 @@ public class NoteController {
     }
 
 //  http://localhost:8080/note/edit?id=3
-    @GetMapping("/edit")
-    public ModelAndView editPage(@RequestParam("id") String id) {
+    @GetMapping("/edit/{id}")
+    public ModelAndView editPage(@PathVariable("id") String id) {
         ModelAndView result = new ModelAndView("edit-note");
         try {
             Note note = noteService.getById(Long.parseLong(id));
