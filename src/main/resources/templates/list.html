@@ -11,9 +11,25 @@
     <h1 class="mb-2 text-center">List of Notes</h1>
 
     <div class="d-flex flex-row mb-3 alert alert-info">
-        <a href="/note/add" class="btn btn-success mr-5">Add New Note</a>
+        <a href="/note/add" class="btn btn-success mr-2">Add New Note</a>
+        <a href="/note/list" class="btn btn-primary mr-5">See full list of notes</a>
         <div class="p-2">Total Notes: <span th:text="${totalNotes}"></span></div>
     </div>
+
+    <form th:action="@{/note/searchTitle}" method="get" class="form-inline mb-3">
+        <input type="text" class="form-control mr-2" name="query" placeholder="Search by title" required>
+        <button type="submit" class="btn btn-primary">Find</button>
+    </form>
+
+    <form th:action="@{/note/searchTitleAndContent}" method="get" class="form-inline mb-3">
+        <input type="text" class="form-control mr-2" name="query" placeholder="Search by title or content" required>
+        <button type="submit" class="btn btn-primary">Find</button>
+    </form>
+
+    <form th:action="@{/note/deleteByTitle}" method="post" class="form-inline mb-3">
+        <input type="text" class="form-control mr-2" name="query" placeholder="Delete by title" required>
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
 
     <table class="table table-striped">
         <thead>

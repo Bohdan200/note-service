@@ -1,58 +1,58 @@
 package corp.base;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class NoteService {
-    private final List<Note> notes = new ArrayList<>();
+    private final NoteRepository noteRepository;
 
-    public NoteService() {
-        notes.add(new Note(1, "Note 1", "Java Core + Java Dev"));
-        notes.add(new Note(2, "Note 2", "SQL + JDBC"));
-        notes.add(new Note(3, "Note 3", "Servlets + Hibernate + Flyway"));
-        notes.add(new Note(4, "Note 4", "Spring Boot + GraphQL"));
-        notes.add(new Note(5, "Note 5", "Kotlin + Android API"));
+    public List<Note> findAll() {
+        return noteRepository.findAll();
     }
 
-    List<Note> listAll() {
-        return new ArrayList<>(notes);
+    public long findCount() {
+        return noteRepository.count();
     }
 
-    Note getById(long id) {
-        return notes.stream()
-                .filter(a -> a.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Note with id " + id + " not found"));
+    public Note getById(String id) {
+        return noteRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new NoSuchElementException("Note not found with id: " + id));
     }
 
-    Note add(Note note) {
-        notes.add(note);
-        return note;
+    public void save(Note note) {
+        noteRepository.save(note);
     }
 
-    void update(Note note) {
-        notes.stream()
-                .filter(n -> n.getId() == note.getId())
-                .findFirst()
-                .ifPresentOrElse(
-                        n -> {
-                            n.setId(note.getId());
-                            n.setTitle(note.getTitle());
-                            n.setContent(note.getContent());
-                        },
-                        () -> {
-                            throw new IllegalArgumentException("Note with id " + note.getId() + " not found");
-                        }
-                );
-    }
-
-    void deleteById(long id) {
-        boolean isRemoved = notes.removeIf(note -> note.getId() == id);
-        if (!isRemoved) {
-            throw new IllegalArgumentException("Note with id " + id + " not found");
+    public boolean exists(String id) {
+        if (id == null) {
+            return false;
         }
+
+        return noteRepository.existsById(Long.valueOf(id));
+    }
+
+    public List<Note> searchTitle(String query) {
+        return noteRepository.searchTitle("%" + query + "%");
+    }
+
+    public List<Note> searchTitleAndContent(String query) {
+        return noteRepository.searchTitleAndContent("%" + query + "%");
+    }
+
+    public void deleteById(String id) {
+        noteRepository.deleteById(Long.valueOf(id));
+    }
+
+
+    @Transactional(rollbackOn = {NullPointerException.class}, dontRollbackOn = {IOException.class})
+    public void deleteAllByTitle(String title) {
+        noteRepository.deleteAllByTitle("%" + title + "%");
     }
 }
