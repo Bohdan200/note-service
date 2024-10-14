@@ -76,17 +76,18 @@ public class NoteController {
     }
 
     // GET  http://localhost:8080/note/edit/5
-    @GetMapping("/edit/{id}")
-    public ModelAndView editPage(@PathVariable("id") String id) {
-        ModelAndView result = new ModelAndView("edit-note");
+    @GetMapping("/note/edit/{id}")
+    public ModelAndView editPage(@PathVariable String id) {
+        ModelAndView modelAndView = new ModelAndView();
         try {
             Note note = noteService.getById(id);
-            result.addObject("note", note);
-        } catch (IllegalArgumentException e) {
-            result.addObject("error", "Note not found");
-            result.setViewName("redirect:/note/list");
+            modelAndView.setViewName("edit-note");
+            modelAndView.addObject("note", note);
+        } catch (NoSuchElementException e) {
+            modelAndView.setViewName("redirect:/note/list");
+            modelAndView.addObject("error", "Note not found");
         }
-        return result;
+        return modelAndView;
     }
 
     // POST  http://localhost:8080/note/edit?id=3&title=newTitle&content=newContent
