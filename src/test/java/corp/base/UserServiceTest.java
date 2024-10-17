@@ -49,4 +49,15 @@ class UserServiceTest {
         Assertions.assertDoesNotThrow(() -> userService.deleteUserById(id));
         verify(userRepository).deleteById(id);
     }
+
+    @Test
+    void testFindByEmail() {
+        String email = "test@example.com";
+        when(userRepository.findByEmail(email)).thenReturn(user);
+
+        User foundUser = userRepository.findByEmail(email);
+        Assertions.assertNotNull(foundUser);
+        Assertions.assertEquals(user, foundUser);
+        verify(userRepository).findByEmail(email);
+    }
 }
