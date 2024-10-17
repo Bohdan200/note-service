@@ -54,3 +54,8 @@ tasks.named('test') { useJUnitPlatform() }
 bootJar { archiveFileName = "${archiveBaseName.get()}.jar" }
 
 bootJar { destinationDirectory = file("$rootDir") }
+
+tasks.register('runAllTestsLauncher', JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass.set('corp.base.AllTestsLauncher')
+}
